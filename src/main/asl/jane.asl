@@ -29,7 +29,7 @@ intention(tom, promiseKeeping, 0.42).
 sum(0.0).
 weightSum(0.0).
 dMax(0).
-threshold(0.9).
+threshold(0.8).
 
 // Initializing benevolence program
 !init.
