@@ -29,6 +29,7 @@ intention(tom, promiseKeeping, 0.42).
 sum(0.0).
 weightSum(0.0).
 dMax(0).
+threshold(0.9).
 
 // Initializing benevolence program
 !init.
@@ -93,11 +94,16 @@ dMax(0).
 // Calculate normalized distance 
 +!normalizedDistance(Agent) :
     sum(D) && 
-    dMax(M)=> 
+    dMax(M) && 
+    threshold(T)=> 
 
     // Taking square root and invert distance 
     Alpha = (1 - (#nl.uva.sqrt.RootCalculator.calculateRoot(D,2) / M));
-    #println("The perceived integrity of " + Agent + " is: " + Alpha + ".");
+    if (Alpha > T) {
+    #println("The perceived integrity of " + Agent + " is: " + Alpha + ". And is thus integer.");
+    } else {
+    #println("The perceived integrity of " + Agent + " is: " + Alpha + ". And is thus not integer.");
+    };
 
     // Resetting belief base
     -sum(X);

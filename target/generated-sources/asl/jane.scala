@@ -126,6 +126,8 @@ package asl
             StructTerm("weightSum",Seq[GenericTerm](DoubleTerm(0.0)))
            ,
             StructTerm("dMax",Seq[GenericTerm](IntTerm(0)))
+           ,
+            StructTerm("threshold",Seq[GenericTerm](DoubleTerm(0.9)))
 
 
          )
@@ -474,11 +476,11 @@ package asl
 
                       def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
 
-                                               val ex_L32794 = executionContext.beliefBase.bufferedQuery( StructTerm("agent",Seq[GenericTerm](vars("L32794"))) )
-                                               while (ex_L32794.hasNext) {
-                                                   val sol_L32794 = ex_L32794.next
-                                                   if(sol_L32794.result) {
-                                                   vars += ("Name" -> sol_L32794.bindings("L32794").asInstanceOf[GenericTerm])
+                                               val ex_L31542 = executionContext.beliefBase.bufferedQuery( StructTerm("agent",Seq[GenericTerm](vars("L31542"))) )
+                                               while (ex_L31542.hasNext) {
+                                                   val sol_L31542 = ex_L31542.next
+                                                   if(sol_L31542.result) {
+                                                   vars += ("Name" -> sol_L31542.bindings("L31542").asInstanceOf[GenericTerm])
                                                                        adopt_achievement_initt_1.execute(Parameters(List( vars("Name")  )))
 
                                                    }
@@ -525,11 +527,11 @@ package asl
 
                       def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
 
-                                               val ex_L65380 = executionContext.beliefBase.bufferedQuery( StructTerm("principle",Seq[GenericTerm](vars("Agent"),vars("L65380"),vars("P"))) )
-                                               while (ex_L65380.hasNext) {
-                                                   val sol_L65380 = ex_L65380.next
-                                                   if(sol_L65380.result) {
-                                                   vars += ("X" -> sol_L65380.bindings("L65380").asInstanceOf[GenericTerm])
+                                               val ex_L50400 = executionContext.beliefBase.bufferedQuery( StructTerm("principle",Seq[GenericTerm](vars("Agent"),vars("L50400"),vars("P"))) )
+                                               while (ex_L50400.hasNext) {
+                                                   val sol_L50400 = ex_L50400.next
+                                                   if(sol_L50400.result) {
+                                                   vars += ("X" -> sol_L50400.bindings("L50400").asInstanceOf[GenericTerm])
                                                                        adopt_achievement_distanceSum_2.execute(Parameters(List( vars("Agent") , vars("X")  )))
                                                                        adopt_achievement_distanceMax_2.execute(Parameters(List( vars("Agent") , IntTerm(1)  )))
 
@@ -672,7 +674,7 @@ package asl
                          vars("Parent").bind_to(StringTerm(executionContext.parent.name))
                          vars +=(   "Agent" -> params.l_params(0))
 
-                         val r0 = executionContext.beliefBase.query(StructTerm(",",Seq[GenericTerm](StructTerm("sum",Seq[GenericTerm](vars("D"))),StructTerm("dMax",Seq[GenericTerm](vars("M"))))))
+                         val r0 = executionContext.beliefBase.query(StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm("sum",Seq[GenericTerm](vars("D"))),StructTerm("dMax",Seq[GenericTerm](vars("M"))))),StructTerm("threshold",Seq[GenericTerm](vars("T"))))))
 
                          if (r0.result) {
                              r0.bindings foreach { case (k, v) =>
@@ -694,7 +696,14 @@ package asl
                       def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
 
                                            vars += ("Alpha" ->  (IntTerm(1) -  (nl.uva.sqrt.RootCalculator.calculateRoot(vars("D"),IntTerm(2)) / vars("M")) ) )
-                                          PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( ( (StringTerm("The perceived integrity of ") + vars("Agent"))  + StringTerm(" is: "))  + vars("Alpha"))  + StringTerm(".")) )))
+                                          if(( (vars("Alpha") > vars("T")) ).holds) {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( ( (StringTerm("The perceived integrity of ") + vars("Agent"))  + StringTerm(" is: "))  + vars("Alpha"))  + StringTerm(". And is thus integer.")) )))
+
+                                          }
+                                           else {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( ( (StringTerm("The perceived integrity of ") + vars("Agent"))  + StringTerm(" is: "))  + vars("Alpha"))  + StringTerm(". And is thus not integer.")) )))
+
+                                           }
                                            BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("-", StructTerm("sum",Seq[GenericTerm](vars("X")))),GoalParser)
                                            BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("-", StructTerm("dMax",Seq[GenericTerm](vars("M")))),GoalParser)
                                            BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("+", StructTerm("dMax",Seq[GenericTerm](IntTerm(0)))),GoalParser)

@@ -454,21 +454,21 @@ package asl
 
                                           PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( (StringTerm("Evaluating the competence of ") + StructTerm("tom",Seq[GenericTerm]()))  + StringTerm(" for the goal: "))  + vars("Goal")) )))
                                           PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( (StringTerm("The goal ") + vars("Goal"))  + StringTerm(" consists of the subplans: ")) )))
-                                               val ex_L95989 = executionContext.beliefBase.bufferedQuery( StructTerm("subplan",Seq[GenericTerm](vars("Goal"),vars("L95989"))) )
-                                               while (ex_L95989.hasNext) {
-                                                   val sol_L95989 = ex_L95989.next
-                                                   if(sol_L95989.result) {
-                                                   vars += ("Subplan" -> sol_L95989.bindings("L95989").asInstanceOf[GenericTerm])
+                                               val ex_L34700 = executionContext.beliefBase.bufferedQuery( StructTerm("subplan",Seq[GenericTerm](vars("Goal"),vars("L34700"))) )
+                                               while (ex_L34700.hasNext) {
+                                                   val sol_L34700 = ex_L34700.next
+                                                   if(sol_L34700.result) {
+                                                   vars += ("Subplan" -> sol_L34700.bindings("L34700").asInstanceOf[GenericTerm])
                                                                        PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( (StringTerm("- ") + vars("Subplan")) )))
 
                                                    }
                                                }
                                            vars -= ("Subplan")
-                                               val ex_L85895 = executionContext.beliefBase.bufferedQuery( StructTerm("subplan",Seq[GenericTerm](vars("Goal"),vars("L85895"))) )
-                                               while (ex_L85895.hasNext) {
-                                                   val sol_L85895 = ex_L85895.next
-                                                   if(sol_L85895.result) {
-                                                   vars += ("Subplan" -> sol_L85895.bindings("L85895").asInstanceOf[GenericTerm])
+                                               val ex_L90572 = executionContext.beliefBase.bufferedQuery( StructTerm("subplan",Seq[GenericTerm](vars("Goal"),vars("L90572"))) )
+                                               while (ex_L90572.hasNext) {
+                                                   val sol_L90572 = ex_L90572.next
+                                                   if(sol_L90572.result) {
+                                                   vars += ("Subplan" -> sol_L90572.bindings("L90572").asInstanceOf[GenericTerm])
                                                                        PrimitiveAction.execute(PrimitiveAction.Parameters(() => println(StringTerm(" "))))
                                                                        PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( (StringTerm("Evaluating the subplan: ") + vars("Subplan")) )))
                                                                        adopt_achievement_comp_conditions_3.execute(Parameters(List( vars("AgentT") , StructTerm("tom",Seq[GenericTerm]()) , vars("Subplan")  )))
