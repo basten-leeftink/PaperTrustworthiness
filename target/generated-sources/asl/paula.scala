@@ -41,6 +41,18 @@ package asl
                    case paula.this.adopt_test_benevolent_2 =>
                      paula.this.adopt_test_benevolent_2.execute(message.params.asInstanceOf[Parameters])
 
+                   case paula.this.adopt_achievement_competent_3 =>
+                     paula.this.adopt_achievement_competent_3.execute(message.params.asInstanceOf[Parameters])
+
+                   case paula.this.adopt_achievement_comp_conditions_3 =>
+                     paula.this.adopt_achievement_comp_conditions_3.execute(message.params.asInstanceOf[Parameters])
+
+                   case paula.this.adopt_achievement_comp_subplans_2 =>
+                     paula.this.adopt_achievement_comp_subplans_2.execute(message.params.asInstanceOf[Parameters])
+
+                   case paula.this.adopt_achievement_comp_total_2 =>
+                     paula.this.adopt_achievement_comp_total_2.execute(message.params.asInstanceOf[Parameters])
+
 
            case _ =>
              context.log.error("This actor can not handle goal of type {}", message.goal)
@@ -68,6 +80,9 @@ package asl
          var vars = VarMap()
 
          def initGoals()(implicit executionContext: ExecutionContext) = List[StructTerm](
+                     StructTerm("competent",Seq[GenericTerm]( StructTerm("agentT",Seq[GenericTerm]()) , StructTerm("paula",Seq[GenericTerm]()) , StructTerm("report",Seq[GenericTerm]())  ))
+
+
          )
 
          def initBeliefs()(implicit executionContext: ExecutionContext) = List[StructTerm](
@@ -90,6 +105,36 @@ package asl
             StructTerm("benevolence",Seq[GenericTerm](StructTerm("honesty",Seq[GenericTerm]()),DoubleTerm(0.3)))
            ,
             StructTerm("benevolence",Seq[GenericTerm](StructTerm("promiseKeep",Seq[GenericTerm]()),DoubleTerm(0.2)))
+           ,
+            StructTerm("goal",Seq[GenericTerm](StructTerm("report",Seq[GenericTerm]())))
+           ,
+            StructTerm("subplan",Seq[GenericTerm](StructTerm("report",Seq[GenericTerm]()),StructTerm("research",Seq[GenericTerm]())))
+           ,
+            StructTerm("subplan",Seq[GenericTerm](StructTerm("report",Seq[GenericTerm]()),StructTerm("writing",Seq[GenericTerm]())))
+           ,
+            StructTerm("knowledge",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),StructTerm("research",Seq[GenericTerm]()),DoubleTerm(0.9)))
+           ,
+            StructTerm("knowledge",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),StructTerm("writing",Seq[GenericTerm]()),DoubleTerm(0.7)))
+           ,
+            StructTerm("skill",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),StructTerm("research",Seq[GenericTerm]()),DoubleTerm(0.8)))
+           ,
+            StructTerm("skill",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),StructTerm("writing",Seq[GenericTerm]()),DoubleTerm(0.9)))
+           ,
+            StructTerm("resource",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),StructTerm("research",Seq[GenericTerm]()),IntTerm(1)))
+           ,
+            StructTerm("resource",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),StructTerm("writing",Seq[GenericTerm]()),IntTerm(1)))
+           ,
+            StructTerm("threshold_knowledge",Seq[GenericTerm](StructTerm("agentT",Seq[GenericTerm]()),StructTerm("research",Seq[GenericTerm]()),DoubleTerm(0.7)))
+           ,
+            StructTerm("threshold_knowledge",Seq[GenericTerm](StructTerm("agentT",Seq[GenericTerm]()),StructTerm("writing",Seq[GenericTerm]()),DoubleTerm(0.6)))
+           ,
+            StructTerm("threshold_skill",Seq[GenericTerm](StructTerm("agentT",Seq[GenericTerm]()),StructTerm("research",Seq[GenericTerm]()),DoubleTerm(0.8)))
+           ,
+            StructTerm("threshold_skill",Seq[GenericTerm](StructTerm("agentT",Seq[GenericTerm]()),StructTerm("writing",Seq[GenericTerm]()),DoubleTerm(0.7)))
+           ,
+            StructTerm("number_of_subs",Seq[GenericTerm](StructTerm("report",Seq[GenericTerm]()),IntTerm(0)))
+           ,
+            StructTerm("succeeded_subs",Seq[GenericTerm](StructTerm("report",Seq[GenericTerm]()),IntTerm(0)))
            ,
             StructTerm(":-",Seq[GenericTerm](StructTerm("wrongplan",Seq[GenericTerm](vars("X"),vars("V"))),StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm("phi",Seq[GenericTerm](vars("V"),vars("X"),vars("Y"))),StructTerm("benevolence",Seq[GenericTerm](vars("V"),vars("Z"))))),StructTerm("initial",Seq[GenericTerm](vars("Plan"))))),StructTerm("phi",Seq[GenericTerm](vars("V"),vars("Plan"),vars("T"))))),StructTerm("is",Seq[GenericTerm](vars("Ben"),StructTerm("+",Seq[GenericTerm](vars("Y"),vars("Z"))))))),StructTerm(">",Seq[GenericTerm](vars("T"),vars("Ben")))))))
            ,
@@ -254,14 +299,30 @@ package asl
 
    object GoalParser extends IAgentGoalParser {
         override def create_goal_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
-                    {
+                   
+                                   if(t.matchOnlyFunctorAndArity("competent",3)) {
+                                     val args: Parameters = Parameters(t.terms.toList)
+                                     Option(SubGoalMessage(adopt_achievement_competent_3, args, ref))
+                                   } else  
+                                   if(t.matchOnlyFunctorAndArity("comp_conditions",3)) {
+                                     val args: Parameters = Parameters(t.terms.toList)
+                                     Option(SubGoalMessage(adopt_achievement_comp_conditions_3, args, ref))
+                                   } else  
+                                   if(t.matchOnlyFunctorAndArity("comp_subplans",2)) {
+                                     val args: Parameters = Parameters(t.terms.toList)
+                                     Option(SubGoalMessage(adopt_achievement_comp_subplans_2, args, ref))
+                                   } else  
+                                   if(t.matchOnlyFunctorAndArity("comp_total",2)) {
+                                     val args: Parameters = Parameters(t.terms.toList)
+                                     Option(SubGoalMessage(adopt_achievement_comp_total_2, args, ref))
+                                   } else   {
                     Option.empty[SubGoalMessage]
                     }
 
                 }
 
         override def create_belief_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
-                    {
+                        {
                     Option.empty[SubGoalMessage]
                     }
 
@@ -271,12 +332,12 @@ package asl
                                                    if(t.matchOnlyFunctorAndArity("benevolent",2)) {
                                                      val args: Parameters = Parameters(t.terms.toList)
                                                      Option(SubGoalMessage(adopt_test_benevolent_2, args, ref))
-                                                   } else   {
+                                                   } else       {
                             Option.empty[SubGoalMessage]
                             }
                         }
           override def create_unbelief_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
-                                     {
+                                         {
                                      Option.empty[SubGoalMessage]
                                      }
                                  }
@@ -332,6 +393,294 @@ package asl
 
                                           PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( (StringTerm("acceptable plan ") + vars("Z")) )))
                                           PrimitiveAction.execute(PrimitiveAction.Parameters(() => coms.inform(StructTerm("jane",Seq[GenericTerm]()),StructTerm("benevolent",Seq[GenericTerm](StructTerm("agentZ",Seq[GenericTerm]()),vars("X"))))))
+
+
+                     }
+
+
+      }
+
+      object adopt_achievement_competent_3 extends IGoal {
+
+        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
+         var vars = VarMap()
+
+         vars("Self").bind_to(StringTerm(executionContext.name))
+         vars("Source").bind_to(StringTerm(executionContext.src.name))
+         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+
+
+
+
+
+
+                 //plan 0 start
+
+                         vars.clear()
+                         vars("Self").bind_to(StringTerm(executionContext.name))
+                         vars("Source").bind_to(StringTerm(executionContext.src.name))
+                         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+                         vars +=(   "AgentT" -> params.l_params(0))
+                          vars +=( "1" -> params.l_params(1))
+                          vars +=(   "Goal" -> params.l_params(2))
+
+                         val m0 = executionContext.beliefBase.matchTerms(StructTerm("competent",Seq[GenericTerm](vars("AgentT"),StructTerm("paula",Seq[GenericTerm]()),vars("Goal"))),StructTerm("competent",params.l_params));
+                         if(m0.result)
+                         {
+                          m0.bindings foreach { case (k, v) =>
+                          //vars += (k -> v.asInstanceOf[GenericTerm])
+                          if(v.is_bound) vars(k).bind_to(v)
+                          else vars += ( k -> VarTerm(k) )
+                          }
+
+                             plan0(vars)
+                             return
+                          }
+                          // plan 0 end
+
+
+             executionContext.src.asInstanceOf[AkkaMessageSource].address() ! IntentionErrorMessage(NoApplicablePlanMessage(),AkkaMessageSource(executionContext.agent.self))
+
+        }
+
+
+                      def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
+
+                                          PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( (StringTerm("Evaluating the competence of ") + StructTerm("paula",Seq[GenericTerm]()))  + StringTerm(" for the goal: "))  + vars("Goal")) )))
+                                          PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( (StringTerm("The goal ") + vars("Goal"))  + StringTerm(" consists of the subplans: ")) )))
+                                               val ex_L73429 = executionContext.beliefBase.bufferedQuery( StructTerm("subplan",Seq[GenericTerm](vars("Goal"),vars("L73429"))) )
+                                               while (ex_L73429.hasNext) {
+                                                   val sol_L73429 = ex_L73429.next
+                                                   if(sol_L73429.result) {
+                                                   vars += ("Subplan" -> sol_L73429.bindings("L73429").asInstanceOf[GenericTerm])
+                                                                       PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( (StringTerm("- ") + vars("Subplan")) )))
+
+                                                   }
+                                               }
+                                           vars -= ("Subplan")
+                                               val ex_L80041 = executionContext.beliefBase.bufferedQuery( StructTerm("subplan",Seq[GenericTerm](vars("Goal"),vars("L80041"))) )
+                                               while (ex_L80041.hasNext) {
+                                                   val sol_L80041 = ex_L80041.next
+                                                   if(sol_L80041.result) {
+                                                   vars += ("Subplan" -> sol_L80041.bindings("L80041").asInstanceOf[GenericTerm])
+                                                                       PrimitiveAction.execute(PrimitiveAction.Parameters(() => println(StringTerm(" "))))
+                                                                       PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( (StringTerm("Evaluating the subplan: ") + vars("Subplan")) )))
+                                                                       adopt_achievement_comp_conditions_3.execute(Parameters(List( vars("AgentT") , StructTerm("paula",Seq[GenericTerm]()) , vars("Subplan")  )))
+                                                                       adopt_achievement_comp_subplans_2.execute(Parameters(List( vars("Goal") , vars("Subplan")  )))
+
+                                                   }
+                                               }
+                                           vars -= ("Subplan")
+                                          adopt_achievement_comp_total_2.execute(Parameters(List( StructTerm("paula",Seq[GenericTerm]()) , vars("Goal")  )))
+
+
+                     }
+
+
+      }
+
+      object adopt_achievement_comp_conditions_3 extends IGoal {
+
+        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
+         var vars = VarMap()
+
+         vars("Self").bind_to(StringTerm(executionContext.name))
+         vars("Source").bind_to(StringTerm(executionContext.src.name))
+         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+
+
+
+
+
+
+                 //plan 0 start
+
+                         vars.clear()
+                         vars("Self").bind_to(StringTerm(executionContext.name))
+                         vars("Source").bind_to(StringTerm(executionContext.src.name))
+                         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+                         vars +=(   "AgentT" -> params.l_params(0))
+                          vars +=( "1" -> params.l_params(1))
+                          vars +=(   "Subplan" -> params.l_params(2))
+
+                         val m0 = executionContext.beliefBase.matchTerms(StructTerm("comp_conditions",Seq[GenericTerm](vars("AgentT"),StructTerm("paula",Seq[GenericTerm]()),vars("Subplan"))),StructTerm("comp_conditions",params.l_params));
+                         if(m0.result)
+                         {
+                          m0.bindings foreach { case (k, v) =>
+                          //vars += (k -> v.asInstanceOf[GenericTerm])
+                          if(v.is_bound) vars(k).bind_to(v)
+                          else vars += ( k -> VarTerm(k) )
+                          }
+
+                         val r0 = executionContext.beliefBase.query(StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm("knowledge",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),vars("Subplan"),vars("K"))),StructTerm("skill",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),vars("Subplan"),vars("S"))))),StructTerm("resource",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),vars("Subplan"),vars("R"))))),StructTerm("threshold_knowledge",Seq[GenericTerm](vars("AgentT"),vars("Subplan"),vars("TK"))))),StructTerm("threshold_skill",Seq[GenericTerm](vars("AgentT"),vars("Subplan"),vars("TS"))))))
+
+                         if (r0.result) {
+                             r0.bindings foreach { case (k, v) =>
+                            // vars += (k -> v.asInstanceOf[GenericTerm])
+                                      vars(k).bind_to(v)
+                             }
+                             plan0(vars)
+                             return
+                          }
+
+                          }
+                          // plan 0 end
+
+
+             executionContext.src.asInstanceOf[AkkaMessageSource].address() ! IntentionErrorMessage(NoApplicablePlanMessage(),AkkaMessageSource(executionContext.agent.self))
+
+        }
+
+
+                      def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
+
+                                          if(( ( ( (vars("K") >= vars("TK"))  &&  (vars("S") >= vars("TS")) )  &&  (vars("R") == IntTerm(1)) ) ).holds) {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( (StringTerm("- ") + StructTerm("paula",Seq[GenericTerm]()))  + StringTerm(" is competent for the subplan: "))  + vars("Subplan")) )))
+                                                                   BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("+", StructTerm("sub_comp",Seq[GenericTerm](vars("Subplan"),IntTerm(1)))),GoalParser)
+
+                                          }
+                                           else {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( (StringTerm("- ") + StructTerm("paula",Seq[GenericTerm]()))  + StringTerm(" is incompetent for the subplan: "))  + vars("Subplan")) )))
+                                                                   BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("+", StructTerm("sub_comp",Seq[GenericTerm](vars("Subplan"),IntTerm(0)))),GoalParser)
+
+                                           }
+                                          if(( (vars("K") < vars("TK")) ).holds) {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( ( ( (StringTerm("-> ") + StructTerm("paula",Seq[GenericTerm]()))  + StringTerm(" misses "))  +  (vars("TK") - vars("K")) )  + StringTerm(" knowledge for the subplan: "))  + vars("Subplan")) )))
+
+                                          }
+                                          if(( (vars("S") < vars("TS")) ).holds) {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( ( ( (StringTerm("-> ") + StructTerm("paula",Seq[GenericTerm]()))  + StringTerm(" misses "))  +  (vars("TS") - vars("S")) )  + StringTerm(" skills for the subplan: "))  + vars("Subplan")) )))
+
+                                          }
+                                          if(( (vars("R") == IntTerm(0)) ).holds) {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( ( (StringTerm("-> ") + StructTerm("paula",Seq[GenericTerm]()))  + StringTerm(" misses the resources for the subplan: "))  + vars("Subplan")) )))
+
+                                          }
+
+
+                     }
+
+
+      }
+
+      object adopt_achievement_comp_subplans_2 extends IGoal {
+
+        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
+         var vars = VarMap()
+
+         vars("Self").bind_to(StringTerm(executionContext.name))
+         vars("Source").bind_to(StringTerm(executionContext.src.name))
+         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+
+
+
+
+
+
+                 //plan 0 start
+
+                         vars.clear()
+                         vars("Self").bind_to(StringTerm(executionContext.name))
+                         vars("Source").bind_to(StringTerm(executionContext.src.name))
+                         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+                         vars +=(   "Goal" -> params.l_params(0))
+                          vars +=(   "Subplan" -> params.l_params(1))
+
+                         val r0 = executionContext.beliefBase.query(StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm(",",Seq[GenericTerm](StructTerm("sub_comp",Seq[GenericTerm](vars("Subplan"),vars("SubComp"))),StructTerm("number_of_subs",Seq[GenericTerm](vars("Goal"),vars("NS"))))),StructTerm("succeeded_subs",Seq[GenericTerm](vars("Goal"),vars("SS"))))),StructTerm("is",Seq[GenericTerm](vars("NewNS"),StructTerm("+",Seq[GenericTerm](vars("NS"),IntTerm(1))))))),StructTerm("is",Seq[GenericTerm](vars("NewSS"),StructTerm("+",Seq[GenericTerm](vars("SS"),vars("SubComp"))))))))
+
+                         if (r0.result) {
+                             r0.bindings foreach { case (k, v) =>
+                            // vars += (k -> v.asInstanceOf[GenericTerm])
+                                      vars(k).bind_to(v)
+                             }
+                             plan0(vars)
+                             return
+                          }
+
+                          // plan 0 end
+
+
+             executionContext.src.asInstanceOf[AkkaMessageSource].address() ! IntentionErrorMessage(NoApplicablePlanMessage(),AkkaMessageSource(executionContext.agent.self))
+
+        }
+
+
+                      def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
+
+                                           BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("-", StructTerm("number_of_subs",Seq[GenericTerm](vars("Goal"),vars("NS")))),GoalParser)
+                                           BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("+", StructTerm("number_of_subs",Seq[GenericTerm](vars("Goal"),vars("NewNS")))),GoalParser)
+                                           BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("-", StructTerm("succeeded_subs",Seq[GenericTerm](vars("Goal"),vars("SS")))),GoalParser)
+                                           BeliefUpdateAction.execute(BeliefUpdateAction.Parameters("+", StructTerm("succeeded_subs",Seq[GenericTerm](vars("Goal"),vars("NewSS")))),GoalParser)
+
+
+                     }
+
+
+      }
+
+      object adopt_achievement_comp_total_2 extends IGoal {
+
+        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
+         var vars = VarMap()
+
+         vars("Self").bind_to(StringTerm(executionContext.name))
+         vars("Source").bind_to(StringTerm(executionContext.src.name))
+         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+
+
+
+
+
+
+                 //plan 0 start
+
+                         vars.clear()
+                         vars("Self").bind_to(StringTerm(executionContext.name))
+                         vars("Source").bind_to(StringTerm(executionContext.src.name))
+                         vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+                         vars +=( "0" -> params.l_params(0))
+                          vars +=(   "Goal" -> params.l_params(1))
+
+                         val m0 = executionContext.beliefBase.matchTerms(StructTerm("comp_total",Seq[GenericTerm](StructTerm("paula",Seq[GenericTerm]()),vars("Goal"))),StructTerm("comp_total",params.l_params));
+                         if(m0.result)
+                         {
+                          m0.bindings foreach { case (k, v) =>
+                          //vars += (k -> v.asInstanceOf[GenericTerm])
+                          if(v.is_bound) vars(k).bind_to(v)
+                          else vars += ( k -> VarTerm(k) )
+                          }
+
+                         val r0 = executionContext.beliefBase.query(StructTerm(",",Seq[GenericTerm](StructTerm("number_of_subs",Seq[GenericTerm](vars("Goal"),vars("NS"))),StructTerm("succeeded_subs",Seq[GenericTerm](vars("Goal"),vars("SS"))))))
+
+                         if (r0.result) {
+                             r0.bindings foreach { case (k, v) =>
+                            // vars += (k -> v.asInstanceOf[GenericTerm])
+                                      vars(k).bind_to(v)
+                             }
+                             plan0(vars)
+                             return
+                          }
+
+                          }
+                          // plan 0 end
+
+
+             executionContext.src.asInstanceOf[AkkaMessageSource].address() ! IntentionErrorMessage(NoApplicablePlanMessage(),AkkaMessageSource(executionContext.agent.self))
+
+        }
+
+
+                      def plan0(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
+
+                                          PrimitiveAction.execute(PrimitiveAction.Parameters(() => println(StringTerm(" "))))
+                                          if(( (vars("NS") == vars("SS")) ).holds) {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( (StructTerm("paula",Seq[GenericTerm]()) + StringTerm(" is competent for the goal: "))  + vars("Goal")) )))
+
+                                          }
+                                           else {
+                                                                  PrimitiveAction.execute(PrimitiveAction.Parameters(() => println( ( (StructTerm("paula",Seq[GenericTerm]()) + StringTerm(" is incompetent for the goal: "))  + vars("Goal")) )))
+
+                                           }
 
 
                      }
