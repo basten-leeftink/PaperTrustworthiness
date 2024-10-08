@@ -118,6 +118,3 @@ acceptable(X):- not wrongplan(X,_).
     } else {
         #println(paula + " is incompetent for the goal: " + Goal);
     }.
-
-
-

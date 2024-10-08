@@ -110,5 +110,3 @@ threshold(0.8).
     -dMax(M);
     +dMax(0);
     +sum(0.0).
-
-

@@ -119,6 +119,3 @@ acceptable(X):- not wrongplan(X,_).
     } else {
         #println(tom + " is incompetent for the goal: " + Goal);
     }.
-
-
-
